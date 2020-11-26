@@ -1,0 +1,161 @@
+from os import system
+from datetime import datetime
+
+def view_menu():
+	system("cls")
+	menu = """
+	RPG chara maker
+	[A] Buat chara baru
+	[B] Lihat chara
+	[C] Cari chara
+	[D] Perbarui chara
+	[E] Hapus chara
+	[Q] Exit
+	"""
+	print(menu)
+
+def verify_ans(char):
+	char = char.upper()
+	if char == "Y":
+		return True
+	else:
+		return False
+
+def print_data_contact():
+	if all_fields == True:
+		for id_contact in data_contact:
+			nama = data_contact[id_contact]["nama"]
+			ras = data_contact[id_contact]["ras"]
+			vision = data_contact[id_contact]["vision"]
+			senjata = data_contact[id_contact]["senjata"]
+			print(f"ID:{id_contact}\tNAMA:{nama}\tTELP:{telp}\tHOBI:{hobi}")
+ 
+
+def create_id_contact():
+	today = datetime.now()
+	year = today.year
+	month = today.month
+	hari = today.day
+	counter = len(data_contact)+1
+	id_contact = str("%4d%02d%02d-C%03d" % (year, month, hari, counter))
+	return id_contact
+
+def make_new_chara():
+	print_header("-MEMBUAT CHARA BARU-")
+	nama = input("nama\t:") 
+	ras = input("ras\t:")
+	vision = input("vision\t:") 
+	senjata = input("senjata\t")
+ 
+	user_ans = input("Tekan Y untuk menyimpan(Y/N) : ")
+ 
+	if verify_ans(user_ans): 
+		id_contact = create_id_contact()
+		print("Menyiman Data ...")
+		data_contact[id_contact] = {
+			"nama" : nama,
+			"ras" : ras,
+			"vision" : vision,
+			"senjata" : senjata
+		}
+		print("chara dibuat")
+	else:
+		print("chara batal dibuat")
+	input("Tekan ENTER untuk kembali ke MENU")
+
+def print_contact():
+	print_header("-semua chara-")
+	if len(data_contact) == 0:
+		print("<belum ada chara>")
+	else:
+		print_data_contact(all_fields=True)
+	input("Tekan enter untuk kembali ke menu")
+
+def find_contact():
+	print_header("-mencari chara-\n")
+	nama = input("Nama chara Yang Dicari : ")
+	result = searching_by_name(nama)
+	input("Tekan enter untuk kembali ke menu")
+
+def delete_chara():
+	print_header("-deleting chara-")
+	nama = input("Masukkan chara yg ingin di hapus : ")
+	result = searching(nama)
+	if result:
+		respon = input(f"Yakin ingin menghapus {nama} (Y/N): ")
+		if verify_ans(respon):
+			del data_contact[nama]
+			print("chara telah dihapus.")
+ 
+		else:
+			print("chara batal dihapus")
+	input("Tekan ENTER untuk kembali ke menu utama")
+
+def update_nama(contact):
+	print(f"namaLama \t:{contact}")
+	new_nama = input("Nama Baru\t: ")
+	respon = input("Apa yakin ingin mengganti datanya (Y/N) : ")
+	if verify_ans(respon):
+		id_contact = get_id_contact_from_name(contact)
+		data_contact[id_contact]["nama"] = new_nama
+		print("Data telah di-update")
+	else:
+		print("Data batal diperbarui")
+
+def update_ras(contact):
+	id_contact = get_id_contact_from_name(contact)
+	print(f"nama \t:{data_contact[id_contact]['nama']}")
+	print(f"ras Lama\t:{data_contact[id_contact]['ras']}")
+	new_ras = input("ras Baru\t: ")
+	respon = input("Apa yakin ingin mengganti datanya (Y/N) : ")
+	if verify_ans(respon):
+		data_contact[id_contact]['ras'] = new_ras
+		print("Data telah di-update")
+	else:
+		print("Data batal diperbarui")
+
+def update_vision(contact):
+	id_contact = get_id_contact_from_name(contact)
+	print(f"nama \t:{data_contact[id_contact]['nama']}")
+	print(f"vision Lama\t:{data_contact[id_contact]['vision']}")
+	new_vision = input("vision baru\t: ")
+	respon = input("Apa yakin ingin mengganti datanya (Y/N) : ")
+	if verify_ans(respon):
+		data_contact[id_contact]['vision'] = new_vision
+		print("Data telah di-update")
+	else:
+		print("Data batal diperbarui")
+
+def update_senjata(contact):
+	id_contact = get_id_contact_from_name(contact)
+	print(f"nama \t:{data_contact[id_contact]['nama']}")
+	print(f"senjata Lama\t:{data_contact[id_contact]['senjata']}")
+	new_senjata = input("senjata Baru\t: ")
+	respon = input("Apa yakin ingin mengganti datanya (Y/N) : ")
+	if verify_ans(respon):
+		data_contact[id_contact]['senjata'] = new_senjata
+		print("Data telah di-update")
+	else:
+		print("Data batal diperbarui")
+
+def update_contact():
+	print_header("Perbarui chara\n")
+	nama = input("chara yang ingin diperbarui : ")
+	result = searching_by_name(nama)
+	if result:
+		print("Data yang ingin diperbarui : ")
+		print("[1]. Nama , [2]. Telp , [3]. Hobi , [4]. Senjata")
+		respon = input("Pilihan : ")
+		if respon == "1":
+			update_nama(nama)
+		elif respon == "2":
+			update_telp(nama)
+		elif respon == "3":
+			update_hobi(nama)
+		elif respon == "4":
+			update_senjata(nama)
+	input("Tekan ENTER untuk kembali ke menu utama")
+
+
+def exit_program():
+	return True
